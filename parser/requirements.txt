@@ -1,1 +1,3 @@
 hanlp
+"ckipnlp[tagger]"
+ckip-transformers
