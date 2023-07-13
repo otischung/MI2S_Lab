@@ -1,0 +1,24 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.outline {
+    outline: 1px dashed blue;
+}
+
+.box {
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+}
+
+.smallbox {
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+}
+
+.yellow {
+    background-color: yellow;
+}
