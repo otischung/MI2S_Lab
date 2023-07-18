@@ -1,0 +1,28 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.outline {
+    outline: 1px dashed blue;
+}
+
+.box {
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+}
+
+.yellow {
+    background-color: yellow;
+}
+
+.green {
+    background-color: green;
+}
+
+.contain {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+}
