@@ -1,5 +1,7 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
+# from flask_api import status
 from flask_restful import Resource, Api
+import summary_client
 
 
 app = Flask(__name__)
@@ -8,8 +10,14 @@ api = Api(app)
 
 class GetSummary(Resource):
     def post(self):
-        print(request.get_json(force=True))
-        return {"status": "success"}
+        # Text from POST
+        text = request.get_json(force=True)
+        try:
+            summary_client.summary_news(str(text), "社會")
+        except ConnectionRefusedError:
+            app.logger.error("FATAL ERROR: Connection Refused.")
+            return {"status": "fail"}, 500
+        return jsonify({"status": "success"})
 
 
 @app.route("/")
