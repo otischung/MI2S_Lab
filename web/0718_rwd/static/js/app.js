@@ -23,29 +23,46 @@ $(document).ready(function () {
     textarea.on('input', autoResize);
 });
 
-// This function maintains the ajax API for the summit button
-$("#getSummary").click(function () {
-    console.log("Button on click");  // For debugging
-    var val = $(".category:checked").val();
-    alert(val);
-    $.ajax({
-        method: "POST",
-        url: "/summarypost",
-        contentType: 'application/json',
-        data: JSON.stringify($("#inputTextBox").val()),
-        dataType: "json",
-    })
-        .done(function (result) {
-            console.log(result);
-            console.log(result["status"]);
-            alert('成功');
-        })
-        .fail(function () {
-            alert('失敗');
-        })
-        .always(function () {
-            alert('結束');
+$(document).ready(function () {
+    // Function to gather selected radio values and send them to the backend
+    function sendInputAndCategoryToBackend() {
+        var selectedRadios = []; // Array to store selected radio values
+
+        // Loop through all the selected radio buttons and add their values to the array
+        $('input[name="category"]:checked').each(function () {
+            selectedRadios.push($(this).val());
         });
+
+        // Make an Ajax request to send the data to the backend
+        $.ajax({
+            url: '/summarypost',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                "input": $("#inputTextBox").val(),
+                "radios": selectedRadios
+            }),
+            dataType: "json",
+            success: function (response) {
+                console.log('Success:', response);
+                console.log('Success:', response["status"]);
+                $("#Result").text(result["summary"]);
+            },
+            error: function (xhr, status, error) {
+                // Handle any error that occurs during the Ajax request
+                console.error('Error:', error);
+                console.log(xhr)
+                console.log(status)
+                $("#Result").text('// 失敗')
+                alert('失敗');
+            }
+        });
+    }
+
+    // Attach an event handler to a button (or any element) to trigger the Ajax request
+    $("#getSummary").click(function () {
+        sendInputAndCategoryToBackend();
+    });
 });
 /*
 This means when you're sending JSON to the server or receiving JSON from the server,

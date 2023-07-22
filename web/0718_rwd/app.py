@@ -11,13 +11,19 @@ api = Api(app)
 class GetSummary(Resource):
     def post(self):
         # Text from POST
-        text = request.get_json(force=True)
+        req_json = request.get_json(force=True)
+        text = req_json["input"]
+        category = req_json["radios"][0]
+        summary = ""
         try:
-            summary_client.summary_news(str(text), "社會")
+            summary = summary_client.summary_news(str(text), category)
         except ConnectionRefusedError:
             app.logger.error("FATAL ERROR: Connection Refused.")
             return {"status": "fail"}, 500
-        return jsonify({"status": "success"})
+        return jsonify({
+            "status": "success",
+            "summary": summary
+        })
 
 
 @app.route("/")
