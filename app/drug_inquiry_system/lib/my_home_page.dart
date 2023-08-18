@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 import 'DrugCardWidget.dart';
+import 'favorite_page.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -46,7 +47,16 @@ class _MyHomePageState extends State<MyHomePage> {
           title: Text(widget.title),
           actions: [
             IconButton(
-                onPressed: (){},
+                onPressed: (){
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) =>
+                          FavoritePage(
+                              favoriteDrugNames: favoriteDrugNames
+                          )
+                      )
+                  );
+                },
                 icon: const Icon(Icons.favorite)
             )
           ],
@@ -88,7 +98,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     List<dynamic> newData = [];
                     if (keyWord != "") {
                       for (int i = 0; i < data!['DLI'].length; i++) {
-                        if (data['DLI'][i]['中文品名'].contains(keyWord)) {
+                        if (data['DLI'][i]['中文品名'].contains(keyWord) ||
+                            data['DLI'][i]['英文品名'].contains(keyWord) ||
+                            data['DLI'][i]['適應症'].contains(keyWord)) {
                           newData.add(data['DLI'][i]);
                         }
                       }
