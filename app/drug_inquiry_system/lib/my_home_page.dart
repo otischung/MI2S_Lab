@@ -18,9 +18,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String keyWord = "";
   List<String> favoriteDrugNames = [];
+  List<Map<String, dynamic>> favoriteDLIs = [];
 
   // 載入資料(DLI and DA)
   Future<Map<String, dynamic>> loadData() async {
+    print("Loading Data...");
     String jsonDLIString = await rootBundle.loadString('assets/data/DLI.json');
     String jsonDAString = await rootBundle.loadString('assets/data/DA.json');
 
@@ -29,6 +31,7 @@ class _MyHomePageState extends State<MyHomePage> {
       "DA": jsonDecode(jsonDAString),
     };
 
+    print("Load Data has Complete");
     return data;
   }
 
@@ -52,10 +55,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       context,
                       MaterialPageRoute(builder: (context) =>
                           FavoritePage(
-                              favoriteDrugNames: favoriteDrugNames
+                              favoriteDrugNames: favoriteDrugNames,
+                              favoriteDLIs: favoriteDLIs,
                           )
                       )
-                  );
+                  ).then((value) => setState((){}));
                 },
                 icon: const Icon(Icons.favorite)
             )
@@ -83,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         // 刷新
                       });
                     },
-                    icon: Icon(Icons.search))
+                    icon: const Icon(Icons.search))
               ],
             ),
             Expanded(
@@ -138,6 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           },
                           child: DrugCardWidget(
                             favoriteDrugNames: favoriteDrugNames,
+                            favoriteDLIs: favoriteDLIs,
                             item: data['DLI'][index],
                             imgSrc: imgSrc,
                           ),
@@ -147,7 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else {
-                    return CircularProgressIndicator();
+                    return const CircularProgressIndicator();
                   }
                 },
               ),

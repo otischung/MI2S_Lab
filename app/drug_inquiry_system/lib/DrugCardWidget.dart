@@ -4,11 +4,13 @@ class DrugCardWidget extends StatefulWidget {
   const DrugCardWidget({
     super.key,
     required this.favoriteDrugNames,
+    required this.favoriteDLIs,
     required this.item,
     required this.imgSrc,
   });
 
   final List<String> favoriteDrugNames;
+  final List<Map<String, dynamic>> favoriteDLIs;
   final Map<String, dynamic> item;
   final String imgSrc;
 
@@ -27,13 +29,12 @@ class _DrugCardWidgetState extends State<DrugCardWidget> {
             onPressed: () {
               // 狀態重設，重新繪製 UI
               setState(() {
-                if (widget.favoriteDrugNames.contains(
-                    widget.item['中文品名'])) {
-                  widget.favoriteDrugNames.remove(
-                      widget.item['中文品名']);
+                if (widget.favoriteDrugNames.contains(widget.item['中文品名'])) {
+                  widget.favoriteDrugNames.remove(widget.item['中文品名']);
+                  widget.favoriteDLIs.removeWhere((element) => element['中文品名'] == widget.item['中文品名']);
                 } else {
-                  widget.favoriteDrugNames
-                      .add(widget.item['中文品名']);
+                  widget.favoriteDrugNames.add(widget.item['中文品名']);
+                  widget.favoriteDLIs.add(widget.item);
                 }
                 debugPrint(
                     widget.favoriteDrugNames.toString());
@@ -41,8 +42,8 @@ class _DrugCardWidgetState extends State<DrugCardWidget> {
             },
             icon: (widget.favoriteDrugNames.contains(
                 widget.item['中文品名']) == true)
-                ? Icon(Icons.favorite)
-                : Icon(Icons.favorite_border)
+                ? const Icon(Icons.favorite)
+                : const Icon(Icons.favorite_border)
           ),
           Expanded(
             child: ListTile(

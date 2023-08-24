@@ -7,8 +7,13 @@ import 'DrugCardWidget.dart';
 import 'drug_information_page.dart';
 
 class FavoritePage extends StatefulWidget {
-  const FavoritePage({super.key, required this.favoriteDrugNames});
+  const FavoritePage({
+    super.key,
+    required this.favoriteDrugNames,
+    required this.favoriteDLIs,
+  });
   final List<String> favoriteDrugNames;
+  final List<Map<String, dynamic>> favoriteDLIs;
 
   @override
   State<FavoritePage> createState() => _FavoritePageState();
@@ -36,7 +41,7 @@ class _FavoritePageState extends State<FavoritePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        title: Text("收藏藥物"),
+        title: const Text("收藏藥物"),
       ),
       body: Column(
         children: [
@@ -59,7 +64,7 @@ class _FavoritePageState extends State<FavoritePage> {
                       // 刷新
                     });
                   },
-                  icon: Icon(Icons.search))
+                  icon: const Icon(Icons.search))
             ],
           ),
           Expanded(
@@ -73,24 +78,25 @@ class _FavoritePageState extends State<FavoritePage> {
                   // 判斷是否有點擊搜尋
                   List<dynamic> newData = [];
                   if (keyWord != "") {
-                    for (int i = 0; i < data!['DLI'].length; i++) {
-                      if (data['DLI'][i]['中文品名'].contains(keyWord)) {
-                        newData.add(data['DLI'][i]);
+                    for (int i = 0; i < widget.favoriteDLIs.length; i++) {
+                      if (widget.favoriteDLIs[i]['中文品名'].contains(keyWord)) {
+                        newData.add(widget.favoriteDLIs[i]);
                       }
                     }
+                    // This line has bugs.
                     data!['DLI'] = newData;
                   }
 
                   // 重要 ListView.builder
                   return ListView.builder(
-                    itemCount: data!["DLI"].length,
+                    itemCount: widget.favoriteDLIs.length,
                     itemBuilder: (BuildContext context, int index) {
                       // 取得 圖片位址
                       String imgSrc = "";
                       bool containsKey =
-                      data!["DA"].containsKey(data['DLI'][index]['中文品名']);
+                      data!["DA"].containsKey(widget.favoriteDLIs[index]['中文品名']);
                       if (containsKey == true) {
-                        imgSrc = data['DA'][data['DLI'][index]['中文品名']];
+                        imgSrc = data['DA'][widget.favoriteDLIs[index]['中文品名']];
                         print(imgSrc);
                       } else {
                         imgSrc =
@@ -104,7 +110,7 @@ class _FavoritePageState extends State<FavoritePage> {
                               context,
                               MaterialPageRoute(builder: (context) =>
                                   DrugInformationPage(
-                                      data: data['DLI'][index],
+                                      data: widget.favoriteDLIs[index],
                                       imgSrc: imgSrc
                                   )
                               )
@@ -112,7 +118,8 @@ class _FavoritePageState extends State<FavoritePage> {
                         },
                         child: DrugCardWidget(
                           favoriteDrugNames: widget.favoriteDrugNames,
-                          item: data['DLI'][index],
+                          favoriteDLIs: widget.favoriteDLIs,
+                          item: widget.favoriteDLIs[index],
                           imgSrc: imgSrc,
                         ),
                       );
@@ -121,7 +128,7 @@ class _FavoritePageState extends State<FavoritePage> {
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else {
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 }
               },
             ),
